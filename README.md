@@ -1,198 +1,111 @@
 # E-Commerce Sales & Customer Behavior Analytics
 
+Explore how customers shop, what drives sales, and where an e-commerce business can improve. This project brings together Python analysis, SQL queries, statistical testing, machine learning, and an interactive Power BI dashboard.
 
-**Project Overview**
+> **New here?** Start with the [dashboard](#power-bi-dashboard), browse the [key findings](#what-the-analysis-found), or run the [notebook](#run-the-analysis).
 
-This project delivers a full-stack analytics solution for an e-commerce business,covering customer behavior analysis, statistical hypothesis testing, SQL-based
-querying & reporting, and machine learning — culminating in an interactive Power BI dashboard that translates data into actionable business decisions.
+## What’s in the project?
 
-**Tech Stack**
+- **Sales and customer analysis:** Explore revenue, customer segments, returns, discounts, and marketing channels.
+- **Statistical tests:** Check whether revenue differs across customer segments and discount groups.
+- **Purchase prediction:** Compare models that estimate whether a customer will make a purchase.
+- **Interactive reporting:** Explore the results in Power BI.
 
-Data Wrangling & EDA =	Python, Pandas, NumPy, Matplotlib, Seaborn
-Statistical Testing = SciPy, Statsmodels
-Database & Querying	= MYSQL
-Machine Learning = Scikit-learn (LogisticRegression & Random Forest)
-Dashboard	= Power BI
-Version Control	= Git, GitHub
+## Project files
 
+| File or folder | What it’s for |
+| --- | --- |
+| [`e_commerce.xlsx`](e_commerce.xlsx) | Dataset used in the analysis |
+| [`ecom_nb.ipynb`](ecom_nb.ipynb) | Python notebook for data checks, exploration, statistics, and machine learning |
+| [`ecommerce_sql.sql`](ecommerce_sql.sql) | MySQL queries for common business questions |
+| [`ecommerce.pbix`](ecommerce.pbix) | Power BI dashboard |
+| [`image/`](image/) | Charts and dashboard screenshots shown below |
 
-**Key Steps**
+## See the results
 
-**Date Cleaning & Preprocessing**
+### Power BI dashboard
 
-Started with quick understanding of the data by viewing few of the first columns, checked for the datatypes looked for duplicate & missing values where payment method had null values which i imputed with **None** as to preserve those rows and maintain business logic consistency, since customers who did not complete a purchase would not have an associated payment method.
+Open [`ecommerce.pbix`](ecommerce.pbix) with Power BI Desktop to explore the dashboard.
 
- **Exploratory Data Analysis (EDA)**
-   
-Analyzed revenue distribution across categories and regions
+![E-commerce dashboard overview](image/ecom_db1.png)
 
-Plotted a correlation heatmap in order to look for the correlation across all numeric features
+![E-commerce dashboard details](image/ecom_db2.png)
 
-Analysed the return rate across categories for understanding which category had the most return rate
+### Selected analysis charts
 
-Checked for the discount impact on orders to know if promotional(discounted) pricing played a major role in customer purchasing behavior 
+| Customer segments | Revenue by category |
+| --- | --- |
+| ![Revenue by customer segment](image/cust_segment.png) | ![Revenue by category](image/rev_by_cat.png) |
 
+| Monthly revenue | Discount impact |
+| --- | --- |
+| ![Monthly revenue trend](image/monthly_rev_trend.png) | ![Discount impact](image/disc_impact.png) |
 
+| Marketing channel | Returns by region |
+| --- | --- |
+| ![Marketing channel performance](image/marketing_channel.png) | ![Returns by region](image/return_region.png) |
 
-##  Hypothesis Testing (Statistics Layer)
+## Run the analysis
 
-Two statistical tests were performed to validate key business assumptions.
+### Python notebook
 
----
+1. Clone or download this repository and open its folder.
+2. Install Python and Jupyter, then install the libraries used by the notebook:
 
-### Test 1 — Does revenue differ across customer segments?
-**Method:** One-Way ANOVA (`f_oneway`)
+   ```bash
+   python -m pip install jupyter pandas numpy matplotlib seaborn scipy statsmodels scikit-learn openpyxl
+   ```
 
-| | |
-|---|---|
-| **H0** | Revenue is equal and does not differ across customer segments |
-| **H1** | Revenue is not equal and differs across customer segments |
-| **F-statistic** | 41.65399762337787 |
-| **p-value** | 1.14e-18 |
-| **Decision** | ** Reject H0** (p < 0.05) |
+3. Start Jupyter and open `ecom_nb.ipynb`:
 
-**Interpretation:**
-Statistical evidence confirms that revenue is not equal & differs across customer segments.
-This is validated by the average revenue per segment & can be clearly seen that loyal segment is generating higher revenue in comparison to other segments
+   ```bash
+   jupyter notebook
+   ```
 
-| Segment | Avg Revenue |
-|---|---|
-| Loyal | 8076.99|
-| Returning | 5673.33|
-| New | 5200.28 |
+4. Run the cells from top to bottom. The notebook reads `e_commerce.xlsx` from the project folder.
 
+### SQL queries
 
-### Test 2 — Does discount affect revenue?
-**Method:** Independent t-test (`ttest_ind`)
+The SQL file is written for MySQL. It creates and selects the `ecommerce` database, then queries an `ecommerce` table. Before running the analysis queries, load the spreadsheet data into a MySQL table named `ecommerce` with the expected columns.
 
-| | |
-|---|---|
-| **H0** | There is no difference in revenue after discount is applied |
-| **H1** | There is a difference in revenue after discount is applied |
-| **p-value** | 3.67e-09 |
-| **Decision** | **Reject H0** (p < 0.05) |
+The queries cover:
 
-**Interpretation:**
-Statistical evidence confirms that applying a discount significantly affects revenue.
-Orders **with** discount generated higher average revenue than orders **without** discount:
+- Revenue and order counts by category
+- Purchase rate by marketing channel
+- Monthly revenue and month-over-month change
+- Return rate by region
+- Revenue by customer segment
+- Purchase rate for discounted and non-discounted orders
 
-| Group | Avg Revenue |
-|---|---|
-| No Discount Applied | ₹4875 |
-| Discount Applied | ₹6699|
+## What the analysis found
 
-**Insights & Recommendations**
+- **Customer segments:** The notebook found a statistically significant revenue difference across customer segments (one-way ANOVA, *p* = 1.14 × 10⁻¹⁸). Loyal customers had the highest reported average revenue: **8,076.99**.
+- **Discounts:** Revenue differed between discount groups in the notebook’s independent t-test (*p* = 3.67 × 10⁻⁹). The reported average was **6,699** for discounted orders and **4,875** for orders without a discount.
+- **Purchase rates:** Discounted orders had a reported purchase rate of **55.87%**, compared with **31.15%** for non-discounted orders. Email had the highest reported channel purchase rate at **55.89%**.
+- **Returns:** The East region had the highest reported return rate at **7.86%**.
+- **Seasonality:** Revenue peaked in months **6** and **10** in the analysis.
 
-1. Product Category Performance
-Sports & Beauty category generated the highest average revenue at 6507795.06 & 6424946.22 respectively outperforming other categories. This indicates strong customer demand and higher monetization potential within premium-performing categories.
+These results describe patterns in this dataset. They can help guide follow-up questions, but they do not by themselves prove that discounts or marketing channels caused a change in behavior.
 
-![category](image/rev_by_cat.png)
+## Purchase prediction
 
-Business Recommendation:
-Increase inventory allocation, targeted promotions, and cross-selling strategies for high-performing categories while reassessing pricing, assortment, or marketing strategy for underperforming categories.
+The notebook predicts `purchase_made` (0 or 1) using customer and shopping features. It encodes categorical variables, excludes transaction-derived columns to reduce leakage, and uses an 80/20 train/test split.
 
-2. Customer Segment Contribution
-Loyal customers generated approximately ₹12075099.96 higher revenue and average revenue of 8076.99 compared to New & Returning customers, highlighting the strong lifetime value and purchasing power of retained customers.
+| Model | Accuracy | Precision (purchase) | Recall (purchase) | F1 (purchase) |
+| --- | ---: | ---: | ---: | ---: |
+| Logistic Regression | 62.4% | 0.61 | 0.64 | 0.63 |
+| Random Forest (default) | 56.9% | 0.56 | 0.59 | 0.58 |
+| Random Forest (tuned) | 61.5% | 0.59 | 0.69 | 0.64 |
+| Random Forest (threshold 0.3) | 54.4% | 0.52 | 0.94 | 0.67 |
 
-![cust_segment](image/cust_segment.png)
+The threshold-adjusted Random Forest catches more potential purchasers, but it also labels more non-purchasers as likely buyers. That trade-off may be useful for a marketing campaign where missing a potential buyer is considered more costly than sending an extra promotion. Model metrics are specific to this dataset and train/test split.
 
-Business Recommendation:
-Strengthen customer retention initiatives such as loyalty programs, personalized offers, and membership benefits to maximize repeat purchases and long-term revenue growth.
+## Tools used
 
-3. Seasonal Revenue Trends
-Revenue peaked during month 6 & 10 indicating a seasonal purchasing behavior and periods of heightened customer demand across the business cycle.
+- **Python:** pandas, NumPy, Matplotlib, Seaborn, SciPy, Statsmodels, scikit-learn
+- **Database:** MySQL
+- **Dashboard:** Power BI
 
-![trend](image/monthly_rev_trend.png)
+## Notes
 
-Business Recommendation:
-Optimize inventory planning, marketing campaigns, and staffing capacity ahead of peak-demand quarters to capitalize on seasonal sales opportunities and avoid stock shortages.
-
-4. Impact of Discounts on Purchase Conversion
-Customers receiving discounts demonstrated a significantly higher purchase rate (55.87%) compared to customers without discounts (31.15%), indicating that promotional pricing is strongly associated with increased customer conversion behavior.
-
-![discount](image/disc_impact.png)
-
-Business Recommendation:
-Implement targeted discount strategies focused on high-conversion customer groups while monitoring profitability to balance revenue growth with margin sustainability.
-
-5. Marketing Channel Effectiveness
-Email achieved the highest purchase conversion rate at 55.89 %, indicating superior effectiveness in driving customer engagement and completed purchases.
-
-![channel](image/marketing_channel.png)
-
-Business Recommendation:
-Increase marketing investment and campaign optimization efforts on high-performing acquisition channels while evaluating ROI improvements for lower-performing channels.
-
-6. Regional Return Analysis
-Region East recorded the highest return rate at 7.86 %, suggesting potential operational, product-quality, or customer expectation issues within that market.
-
-![region](image/return_region.png)
-
-Business Recommendation:
-Conduct deeper root-cause analysis on returns in the affected region by reviewing delivery performance, product quality, and customer feedback to reduce return-related losses and improve customer satisfaction.
-
-**Power BI Dashboard**
-
-![db1](image/ecom_db1.png)
-
-![db2](image/ecom_db2.png)
-
-
-**Machine Learning Model**
-
-Objective
-Predict whether a customer will make a purchase (`purchase_made`: 0 or 1)
-
-### Features Used
-age, gender, region, customer_segment, category,
-discount_offered, marketing_channel, review_score,
-discount_pct, month, quarter
-
-### Preprocessing
-- Categorical encoding via `pd.get_dummies` with `drop_first=True`
-- Leakage-free feature selection — all transaction-derived columns excluded
-- Train / Test split: **80% / 20%**
-
----
-
-### Models Trained & Compared
-
-| Model                                  | Accuracy | Precision (Class 1) | Recall (Class 1) | F1-Score (Class 1) |
-| -------------------------------------- | -------- | ------------------- | ---------------- | ------------------ |
-| Logistic Regression                    | 62.4%    | 0.61                | 0.64             | 0.63               |
-| Random Forest (Default)                | 56.9%    | 0.56                | 0.59             | 0.58               |
-| Random Forest (Tuned)                  | 61.5%    | 0.59                | 0.69             | 0.64               |
-| Random Forest + Threshold Tuning (0.3) | 54.4%    | 0.52                | 0.94             | 0.67               |
-
-
-### Model Selection & Business Reasoning
-
-> *"This is a synthetic dataset designed to simulate real-world behavior with controlled relationships. Instead of maximizing accuracy, the model was optimized for business impact."*
-
-Three approaches were evaluated:
-
-**Logistic Regression** performed best on raw accuracy (62.4%) and served as a strong, interpretable baseline.
-
-**Random Forest tuned** (`n_estimators=200, max_depth=8, min_samples_split=10, class_weight='balanced'`) improved recall on purchasers (Class 1) to **0.69**, making it better at capturing actual buyers.
-
-**Threshold Lowering (0.3)** pushed recall on Class 1 to **0.94** — meaning the model captures **9 out of 10 potential buyers**, at the cost of precision. This is the most valuable configuration in a **marketing context** where missing a real buyer is costlier than over-targeting.
-
----
-
-### Final Chosen Strategy — Threshold Optimized RF
-
-| Metric | Class 0 (No Purchase) | Class 1 (Purchase) |
-|---|---|---|
-| Precision | 0.73 | 0.52 |
-| Recall | 0.16 | **0.94** |
-| F1-Score | 0.26 | 0.67 |
-
-**Confusion Matrix:**
-Predicted →      0     1
-Actual 0       [  82   425 ]
-Actual 1       [  31   462 ]
-
-**Business Insight:** 
-
-- In a marketing campaign, it is far more costly to miss a potential buyer than to target an extra customer who does not convert
-- sending one unnecessary email costs almost nothing, but missing a ready buyer means lost revenue permanently.
+The analysis and business recommendations are based on the dataset and results included in this repository. Validate findings with current business data before making operational or marketing decisions.
